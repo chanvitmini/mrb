@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NEXUS — Social Commerce & Investment</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --gold: #C9A96E;
+      --gold-light: #E8D5A8;
+      --deep: #0A0E1A;
+      --deep2: #0F1528;
+      --navy: #131C3A;
+      --navy-mid: #1A2550;
+      --teal: #1E8FA8;
+      --teal-glow: #29B8D4;
+      --text-bright: #F2EDE6;
+      --text-mid: #B8B0A4;
+      --text-dim: #6E6860;
+      --section-pad: 100px;
+      --container: 1200px;
+      --gutter: 7%;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--deep);
+      color: var(--text-bright);
+      overflow-x: hidden;
+    }
+
+    #bg-canvas {
+      position: fixed; inset: 0;
+      z-index: 0; pointer-events: none;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.4rem var(--gutter);
+      backdrop-filter: blur(20px);
+      background: rgba(10,14,26,0.6);
+      border-bottom: 1px solid rgba(201,169,110,0.1);
+    }
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.65rem; font-weight: 600;
+      letter-spacing: 0.2em; color: var(--gold); text-transform: uppercase;
+    }
+    .nav-logo span { color: var(--teal-glow); }
+    .nav-links { display: flex; gap: 2.4rem; list-style: none; }
+    .nav-links a {
+      font-size: 0.78rem; letter-spacing: 0.13em; text-transform: uppercase;
+      color: var(--text-mid); text-decoration: none; transition: color 0.3s;
+    }
+    .nav-links a:hover { color: var(--gold-light); }
+    .nav-cta {
+      padding: 0.52rem 1.4rem;
+      border: 1px solid var(--gold); color: var(--gold);
+      font-size: 0.76rem; letter-spacing: 0.13em; text-transform: uppercase;
+      text-decoration: none; border-radius: 2px; transition: all 0.3s;
+    }
+    .nav-cta:hover { background: var(--gold); color: var(--deep); }
+
+    /* ── SHARED ── */
+    .wrap {
+      max-width: var(--container);
+      margin: 0 auto;
+      padding: 0 var(--gutter);
+    }
+    section { position: relative; z-index: 1; }
+
+    .tag {
+      display: inline-flex; align-items: center; gap: 0.75rem;
+      font-size: 0.68rem; letter-spacing: 0.26em; text-transform: uppercase;
+      color: var(--teal-glow); margin-bottom: 1.2rem;
+    }
+    .tag::before {
+      content: ''; display: block;
+      width: 28px; height: 1px; background: var(--teal-glow);
+    }
+    .headline {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 3.8vw, 3.4rem);
+      font-weight: 300; line-height: 1.18; color: var(--text-bright);
+    }
+    .headline em { font-style: italic; color: var(--gold); }
+    .body-text {
+      font-size: 0.92rem; line-height: 1.85;
+      color: var(--text-mid); font-weight: 300;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      padding: 0.85rem 2.2rem;
+      background: linear-gradient(135deg, var(--gold) 0%, #A07840 100%);
+      color: var(--deep); font-size: 0.8rem; font-weight: 500;
+      letter-spacing: 0.13em; text-transform: uppercase;
+      text-decoration: none; border-radius: 2px; border: none; cursor: pointer;
+      transition: transform 0.3s, box-shadow 0.3s;
+      box-shadow: 0 0 28px rgba(201,169,110,0.22);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 36px rgba(201,169,110,0.38); }
+    .btn-ghost {
+      display: inline-block;
+      padding: 0.85rem 2.2rem;
+      border: 1px solid rgba(255,255,255,0.18); color: var(--text-bright);
+      font-size: 0.8rem; letter-spacing: 0.13em; text-transform: uppercase;
+      text-decoration: none; border-radius: 2px; transition: border-color 0.3s, color 0.3s;
+    }
+    .btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: 1fr auto;
+      padding-top: 80px;
+    }
+    .hero-body {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+      padding: 0 var(--gutter);
+      max-width: var(--container);
+      margin: 0 auto;
+      width: 100%;
+    }
+    .hero-eyebrow {
+      display: flex; align-items: center; gap: 0.85rem;
+      font-size: 0.7rem; letter-spacing: 0.26em;
+      text-transform: uppercase; color: var(--teal-glow); margin-bottom: 1.5rem;
+    }
+    .hero-eyebrow::before {
+      content: ''; display: block;
+      width: 32px; height: 1px; background: var(--teal-glow);
+    }
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.8rem, 5.5vw, 5.6rem);
+      font-weight: 300; line-height: 1.06;
+      color: var(--text-bright); margin-bottom: 1.4rem;
+    }
+    .hero-title em { font-style: italic; color: var(--gold); }
+    .hero-title strong { font-weight: 600; color: var(--gold-light); display: block; }
+    .hero-sub {
+      font-size: 0.95rem; line-height: 1.8;
+      color: var(--text-mid); max-width: 420px; margin-bottom: 2.6rem; font-weight: 300;
+    }
+    .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+    /* hero right — stats panel */
+    .hero-right {
+      display: flex; flex-direction: column; gap: 1.2rem; align-items: stretch;
+    }
+    .stat-card {
+      background: rgba(19,28,58,0.7);
+      border: 1px solid rgba(201,169,110,0.15);
+      border-radius: 4px; padding: 1.6rem 2rem;
+      display: flex; justify-content: space-between; align-items: center;
+      backdrop-filter: blur(8px);
+      transition: border-color 0.3s;
+    }
+    .stat-card:hover { border-color: rgba(201,169,110,0.32); }
+    .stat-label {
+      font-size: 0.7rem; letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--text-dim); margin-bottom: 0.35rem;
+    }
+    .stat-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.1rem; font-weight: 300; color: var(--gold); line-height: 1;
+    }
+    .stat-badge {
+      font-size: 0.7rem; letter-spacing: 0.1em;
+      color: var(--teal-glow); background: rgba(41,184,212,0.1);
+      border: 1px solid rgba(41,184,212,0.2);
+      padding: 0.3rem 0.75rem; border-radius: 20px;
+    }
+
+    /* hero bottom strip */
+    .hero-bottom {
+      border-top: 1px solid rgba(201,169,110,0.1);
+      display: flex; align-items: center; justify-content: center;
+      gap: 4rem; padding: 1.4rem var(--gutter);
+    }
+    .hb-item {
+      display: flex; align-items: center; gap: 0.7rem;
+      font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--text-dim);
+    }
+    .hb-dot {
+      width: 5px; height: 5px; border-radius: 50%; background: var(--gold); opacity: 0.6;
+    }
+
+    /* ── MARQUEE ── */
+    .marquee-strip {
+      border-top: 1px solid rgba(201,169,110,0.12);
+      border-bottom: 1px solid rgba(201,169,110,0.12);
+      background: rgba(201,169,110,0.03);
+      padding: 0.9rem 0; overflow: hidden; white-space: nowrap;
+    }
+    .marquee-inner { display: inline-flex; animation: marquee 28s linear infinite; }
+    .marquee-item {
+      display: inline-flex; align-items: center; gap: 0.9rem;
+      padding: 0 2rem; font-size: 0.68rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--text-dim);
+    }
+    .m-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--gold); opacity: 0.5; }
+    @keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+    /* ── ABOUT ── */
+    .about { padding: var(--section-pad) 0; }
+    .two-col {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 6rem; align-items: center;
+    }
+    .about-visual {
+      display: grid; grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto auto; gap: 1rem;
+    }
+    .a-card {
+      border-radius: 4px; padding: 1.8rem;
+      border: 1px solid rgba(201,169,110,0.14);
+      background: rgba(15,21,40,0.85);
+    }
+    .a-card.span2 { grid-column: 1 / 3; }
+    .a-card-label {
+      font-size: 0.64rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--text-dim); margin-bottom: 0.5rem;
+    }
+    .a-card-val {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.2rem; color: var(--gold); line-height: 1;
+    }
+    .a-card-sub { font-size: 0.75rem; color: var(--text-dim); margin-top: 0.3rem; }
+    .chart-mini {
+      display: flex; align-items: flex-end; gap: 4px;
+      height: 50px; margin-top: 0.8rem;
+    }
+    .bar {
+      flex: 1; border-radius: 2px 2px 0 0;
+      background: linear-gradient(to top, var(--teal), var(--teal-glow));
+      animation: growBar 1.6s ease-out forwards; transform-origin: bottom;
+    }
+    @keyframes growBar { from{transform:scaleY(0)} to{transform:scaleY(1)} }
+
+    /* ── SERVICES ── */
+    .services { padding: var(--section-pad) 0; }
+    .section-header {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 4rem; align-items: end; margin-bottom: 4rem;
+    }
+    .services-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+      background: rgba(201,169,110,0.08);
+      border: 1px solid rgba(201,169,110,0.08);
+    }
+    .svc-card {
+      background: var(--deep2); padding: 2.8rem 2.2rem;
+      position: relative; overflow: hidden; transition: background 0.3s;
+    }
+    .svc-card::after {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, var(--gold), var(--teal));
+      transform: scaleX(0); transform-origin: left; transition: transform 0.4s;
+    }
+    .svc-card:hover { background: var(--navy); }
+    .svc-card:hover::after { transform: scaleX(1); }
+    .svc-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.85rem; color: var(--gold); opacity: 0.4;
+      letter-spacing: 0.1em; margin-bottom: 1.2rem;
+    }
+    .svc-icon { margin-bottom: 1.4rem; }
+    .svc-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.45rem; color: var(--text-bright);
+      margin-bottom: 0.75rem; line-height: 1.3;
+    }
+    .svc-desc {
+      font-size: 0.83rem; line-height: 1.78;
+      color: var(--text-dim); font-weight: 300;
+    }
+
+    /* ── INVESTMENT ── */
+    .investment { padding: var(--section-pad) 0; }
+    .invest-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 6rem; align-items: center;
+    }
+    .invest-list { list-style: none; display: flex; flex-direction: column; gap: 0.7rem; margin: 1.8rem 0 2.4rem; }
+    .invest-list li {
+      display: flex; align-items: center; gap: 0.75rem;
+      font-size: 0.85rem; color: var(--text-mid);
+    }
+    .invest-list li::before { content: '✦'; color: var(--teal-glow); font-size: 0.65rem; }
+    .market-panel {
+      background: rgba(15,21,40,0.9);
+      border: 1px solid rgba(201,169,110,0.18); border-radius: 4px;
+      padding: 0; overflow: hidden; backdrop-filter: blur(10px);
+    }
+    .panel-head {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.4rem 1.8rem;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      background: rgba(255,255,255,0.02);
+    }
+    .panel-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.05rem; color: var(--text-bright);
+    }
+    .live-badge {
+      font-size: 0.6rem; letter-spacing: 0.16em; text-transform: uppercase;
+      color: #4ADE80; display: flex; align-items: center; gap: 0.45rem;
+    }
+    .live-badge::before {
+      content: ''; width: 6px; height: 6px; border-radius: 50%;
+      background: #4ADE80; box-shadow: 0 0 7px #4ADE80;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+    .ticker-list { padding: 0.5rem 0; }
+    .ticker-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0.85rem 1.8rem; transition: background 0.2s;
+    }
+    .ticker-row:hover { background: rgba(201,169,110,0.05); }
+    .t-sym {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.05rem; font-weight: 600; color: var(--text-bright);
+    }
+    .t-name { font-size: 0.7rem; color: var(--text-dim); margin-top: 2px; }
+    .t-price { font-size: 0.88rem; color: var(--text-bright); text-align: right; }
+    .t-change { font-size: 0.7rem; margin-top: 2px; text-align: right; }
+    .up { color: #4ADE80; } .down { color: #F87171; }
+    .panel-foot {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1rem 1.8rem;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      background: rgba(255,255,255,0.015);
+    }
+    .panel-foot-label { font-size: 0.68rem; color: var(--text-dim); letter-spacing: 0.1em; }
+    .panel-foot-val {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.25rem; color: var(--gold);
+    }
+
+    /* ── SOCIAL COMMERCE ── */
+    .social { padding: var(--section-pad) 0; }
+    .section-header-center { text-align: center; margin-bottom: 4rem; }
+    .section-header-center .tag { justify-content: center; }
+    .section-header-center .tag::before { display: none; }
+    .section-header-center .headline { font-size: clamp(2rem, 4vw, 3.6rem); }
+    .section-header-center .body-text { max-width: 520px; margin: 1rem auto 0; }
+
+    .social-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: auto auto;
+      gap: 1px; background: rgba(201,169,110,0.08);
+      border: 1px solid rgba(201,169,110,0.08);
+    }
+    .sc-cell {
+      background: var(--deep2); padding: 2.6rem 2.2rem;
+      transition: background 0.3s;
+    }
+    .sc-cell:hover { background: var(--navy); }
+    .sc-cell.hero-cell {
+      grid-column: 1 / 3; grid-row: 1 / 3;
+      background: linear-gradient(145deg, var(--navy) 0%, var(--navy-mid) 100%);
+      border-right: 1px solid rgba(201,169,110,0.12);
+      position: relative; overflow: hidden;
+    }
+    .sc-cell.hero-cell::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(circle at 25% 70%, rgba(30,143,168,0.1) 0%, transparent 55%);
+      pointer-events: none;
+    }
+    .sc-icon { font-size: 2rem; margin-bottom: 1.2rem; display: block; }
+    .sc-hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem; font-weight: 300; line-height: 1.22;
+      color: var(--text-bright); margin-bottom: 1rem;
+    }
+    .sc-hero-title em { font-style: italic; color: var(--gold); }
+    .sc-hero-body { font-size: 0.88rem; line-height: 1.8; color: var(--text-mid); font-weight: 300; }
+    .sc-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem; color: var(--text-bright); margin-bottom: 0.55rem;
+    }
+    .sc-body { font-size: 0.8rem; line-height: 1.75; color: var(--text-dim); }
+
+    /* ── CTA ── */
+    .cta-section {
+      padding: var(--section-pad) 0; text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .cta-section::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse 70% 55% at 50% 50%, rgba(201,169,110,0.07) 0%, transparent 70%);
+    }
+    .cta-divider {
+      width: 1px; height: 70px; margin: 0 auto 3rem;
+      background: linear-gradient(to bottom, transparent, rgba(201,169,110,0.4), transparent);
+    }
+    .cta-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.4rem, 5vw, 4.6rem);
+      font-weight: 300; line-height: 1.1; margin-bottom: 1.3rem;
+    }
+    .cta-title em { font-style: italic; color: var(--gold); }
+    .cta-sub {
+      font-size: 0.93rem; color: var(--text-mid); font-weight: 300;
+      max-width: 460px; margin: 0 auto 2.8rem; line-height: 1.8;
+    }
+    .cta-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1.8rem; }
+    .cta-trust { font-size: 0.7rem; color: var(--text-dim); letter-spacing: 0.1em; }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid rgba(201,169,110,0.1);
+      padding: 4rem 0 2rem; position: relative; z-index: 1;
+    }
+    .footer-grid {
+      display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr;
+      gap: 3rem; margin-bottom: 3rem;
+    }
+    .f-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem; font-weight: 600;
+      letter-spacing: 0.2em; color: var(--gold); text-transform: uppercase; margin-bottom: 0.8rem;
+    }
+    .f-logo span { color: var(--teal-glow); }
+    .f-tagline { font-size: 0.8rem; color: var(--text-dim); line-height: 1.65; max-width: 220px; }
+    .f-col-title {
+      font-size: 0.62rem; letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 1.1rem;
+    }
+    .f-links { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+    .f-links a {
+      font-size: 0.8rem; color: var(--text-dim);
+      text-decoration: none; transition: color 0.25s;
+    }
+    .f-links a:hover { color: var(--text-bright); }
+    .footer-bottom {
+      display: flex; justify-content: space-between; align-items: center;
+      padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.05);
+      font-size: 0.7rem; color: var(--text-dim); letter-spacing: 0.06em;
+      flex-wrap: wrap; gap: 0.5rem;
+    }
+
+    /* ── FADE ANIMATIONS ── */
+    .fade-up {
+      opacity: 0; transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+    .fd2 { transition-delay: 0.1s; }
+    .fd3 { transition-delay: 0.2s; }
+    .fd4 { transition-delay: 0.3s; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 960px) {
+      .hero-body { grid-template-columns: 1fr; padding-top: 3rem; }
+      .hero-right { display: none; }
+      .hero-bottom { gap: 2rem; flex-wrap: wrap; }
+      .two-col, .invest-grid, .section-header { grid-template-columns: 1fr; gap: 3rem; }
+      .services-grid { grid-template-columns: 1fr 1fr; }
+      .social-grid { grid-template-columns: 1fr 1fr; }
+      .sc-cell.hero-cell { grid-column: 1/3; grid-row: auto; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      nav { padding: 1.2rem 5%; }
+      .nav-links { display: none; }
+    }
+    @media (max-width: 640px) {
+      .services-grid, .social-grid { grid-template-columns: 1fr; }
+      .sc-cell.hero-cell { grid-column: auto; }
+      .footer-grid { grid-template-columns: 1fr; }
+      .hero-bottom { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">NEX<span>US</span></div>
+  <ul class="nav-links">
+    <li><a href="#about">เกี่ยวกับเรา</a></li>
+    <li><a href="#services">บริการ</a></li>
+    <li><a href="#investment">การลงทุน</a></li>
+    <li><a href="#social">โซเชียลคอมเมิร์ช</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">เริ่มต้น</a>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-body">
+    <div class="hero-left">
+      <div class="hero-eyebrow">Social Commerce & Investment Platform</div>
+      <h1 class="hero-title">
+        ขับเคลื่อนธุรกิจ<br>
+        <em>และการลงทุน</em><br>
+        <strong>สู่ยุคดิจิทัล</strong>
+      </h1>
+      <p class="hero-sub">เชื่อมต่อโลกของการค้าออนไลน์และตลาดหลักทรัพย์เข้าด้วยกันในแพลตฟอร์มเดียว ด้วยเทคโนโลยีชาญฉลาดและข้อมูลเชิงลึกระดับมืออาชีพ</p>
+      <div class="hero-actions">
+        <a href="#services" class="btn-primary">สำรวจแพลตฟอร์ม</a>
+        <a href="#about" class="btn-ghost">เรียนรู้เพิ่มเติม</a>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="stat-card fade-up">
+        <div>
+          <div class="stat-label">ผู้ใช้งานระดับพรีเมียม</div>
+          <div class="stat-num">48,000+</div>
+        </div>
+        <span class="stat-badge">Active Users</span>
+      </div>
+      <div class="stat-card fade-up fd2">
+        <div>
+          <div class="stat-label">มูลค่าการซื้อขายรายเดือน</div>
+          <div class="stat-num">฿2.4B</div>
+        </div>
+        <span class="stat-badge">Monthly Volume</span>
+      </div>
+      <div class="stat-card fade-up fd3">
+        <div>
+          <div class="stat-label">ผลตอบแทนเฉลี่ย YTD</div>
+          <div class="stat-num">+24.7%</div>
+        </div>
+        <span class="stat-badge up" style="color:#4ADE80;border-color:rgba(74,222,128,0.25);background:rgba(74,222,128,0.08)">▲ ขาขึ้น</span>
+      </div>
+      <div class="stat-card fade-up fd4">
+        <div>
+          <div class="stat-label">System Uptime</div>
+          <div class="stat-num">99.9%</div>
+        </div>
+        <span class="stat-badge">Guaranteed</span>
+      </div>
+    </div>
+  </div>
+  <div class="hero-bottom">
+    <div class="hb-item"><span class="hb-dot"></span>SET & mai Real-time</div>
+    <div class="hb-item"><span class="hb-dot"></span>AI-Powered Analytics</div>
+    <div class="hb-item"><span class="hb-dot"></span>Live Commerce</div>
+    <div class="hb-item"><span class="hb-dot"></span>Portfolio Management</div>
+    <div class="hb-item"><span class="hb-dot"></span>24/7 Expert Support</div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-strip" style="position:relative;z-index:1">
+  <div class="marquee-inner">
+    <span class="marquee-item">Social Commerce <span class="m-dot"></span></span>
+    <span class="marquee-item">Stock Market Analytics <span class="m-dot"></span></span>
+    <span class="marquee-item">AI-Powered Trading <span class="m-dot"></span></span>
+    <span class="marquee-item">Live Market Feed <span class="m-dot"></span></span>
+    <span class="marquee-item">Community Shopping <span class="m-dot"></span></span>
+    <span class="marquee-item">Portfolio Management <span class="m-dot"></span></span>
+    <span class="marquee-item">Influencer Commerce <span class="m-dot"></span></span>
+    <span class="marquee-item">Smart Investment <span class="m-dot"></span></span>
+    <span class="marquee-item">Social Commerce <span class="m-dot"></span></span>
+    <span class="marquee-item">Stock Market Analytics <span class="m-dot"></span></span>
+    <span class="marquee-item">AI-Powered Trading <span class="m-dot"></span></span>
+    <span class="marquee-item">Live Market Feed <span class="m-dot"></span></span>
+    <span class="marquee-item">Community Shopping <span class="m-dot"></span></span>
+    <span class="marquee-item">Portfolio Management <span class="m-dot"></span></span>
+    <span class="marquee-item">Influencer Commerce <span class="m-dot"></span></span>
+    <span class="marquee-item">Smart Investment <span class="m-dot"></span></span>
+  </div>
+</div>
+
+<!-- ── ABOUT ── -->
+<section class="about" id="about">
+  <div class="wrap">
+    <div class="two-col">
+      <div>
+        <div class="tag fade-up">เกี่ยวกับ NEXUS</div>
+        <h2 class="headline fade-up" style="margin-bottom:1.4rem">
+          แพลตฟอร์มที่<br><em>เปลี่ยนวิธี</em><br>ที่คุณทำธุรกิจ
+        </h2>
+        <p class="body-text fade-up" style="margin-bottom:1.2rem">
+          NEXUS ก่อตั้งขึ้นด้วยวิสัยทัศน์ในการรวมโลกแห่งการค้าออนไลน์เชิงสังคม และการลงทุนในตลาดหลักทรัพย์เข้าด้วยกันอย่างลงตัว เราเชื่อว่าชุมชนและข้อมูลจะเป็นพลังขับเคลื่อนความสำเร็จทางการเงินรูปแบบใหม่
+        </p>
+        <p class="body-text fade-up" style="margin-bottom:2.4rem">
+          ด้วยทีมผู้เชี่ยวชาญจากวงการ FinTech และ E-Commerce ชั้นนำ เรานำเสนอโซลูชันครอบคลุมตั้งแต่การขายสินค้าผ่านโซเชียลมีเดียไปจนถึงการวิเคราะห์พอร์ตลงทุนแบบเรียลไทม์
+        </p>
+        <a href="#services" class="btn-primary fade-up">ดูบริการของเรา</a>
+      </div>
+      <div class="about-visual fade-up">
+        <div class="a-card">
+          <div class="a-card-label">ผลตอบแทนเฉลี่ย YTD</div>
+          <div class="a-card-val">+24.7%</div>
+          <div class="a-card-sub">เทียบกับตลาด +11.2%</div>
+        </div>
+        <div class="a-card">
+          <div class="a-card-label">พอร์ตที่บริหาร</div>
+          <div class="a-card-val">฿8.4B</div>
+          <div class="a-card-sub">AUM รวมทุกบัญชี</div>
+        </div>
+        <div class="a-card span2">
+          <div class="a-card-label">Volume Growth — 8 เดือนล่าสุด</div>
+          <div class="chart-mini">
+            <div class="bar" style="height:35%;animation-delay:.0s"></div>
+            <div class="bar" style="height:52%;animation-delay:.08s"></div>
+            <div class="bar" style="height:44%;animation-delay:.16s"></div>
+            <div class="bar" style="height:68%;animation-delay:.24s"></div>
+            <div class="bar" style="height:60%;animation-delay:.32s"></div>
+            <div class="bar" style="height:82%;animation-delay:.40s"></div>
+            <div class="bar" style="height:74%;animation-delay:.48s"></div>
+            <div class="bar" style="height:95%;animation-delay:.56s"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SERVICES ── -->
+<section class="services" id="services">
+  <div class="wrap">
+    <div class="section-header">
+      <div>
+        <div class="tag fade-up">สิ่งที่เรานำเสนอ</div>
+        <h2 class="headline fade-up">บริการ<em>ครบวงจร</em><br>ในที่เดียว</h2>
+      </div>
+      <p class="body-text fade-up" style="padding-top:1rem">เราออกแบบระบบนิเวศทางธุรกิจที่ซิงค์กันอย่างสมบูรณ์แบบ ให้คุณมุ่งเน้นการเติบโตโดยไม่ต้องกังวลกับเครื่องมือที่กระจัดกระจาย</p>
+    </div>
+    <div class="services-grid">
+      <div class="svc-card fade-up">
+        <div class="svc-num">01</div>
+        <svg class="svc-icon" width="40" height="40" viewBox="0 0 40 40" fill="none">
+          <circle cx="20" cy="20" r="17" stroke="#C9A96E" stroke-width="1.2"/>
+          <path d="M11 25l5-7 5 5 4-5 4 7" stroke="#29B8D4" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div class="svc-name">วิเคราะห์ตลาดหุ้น<br>แบบเรียลไทม์</div>
+        <p class="svc-desc">ติดตาม SET, mai และตลาดต่างประเทศด้วยกราฟและข้อมูลเชิงลึกที่อัปเดตทุกวินาที พร้อม AI แนะนำสัญญาณซื้อขาย</p>
+      </div>
+      <div class="svc-card fade-up fd2">
+        <div class="svc-num">02</div>
+        <svg class="svc-icon" width="40" height="40" viewBox="0 0 40 40" fill="none">
+          <rect x="6" y="11" width="28" height="19" rx="2.5" stroke="#C9A96E" stroke-width="1.2"/>
+          <path d="M13 20h5M13 24h8" stroke="#29B8D4" stroke-width="1.4" stroke-linecap="round"/>
+          <circle cx="30" cy="13" r="5" fill="#1E8FA8" opacity="0.85"/>
+          <path d="M28 13l1.3 1.3L32 11" stroke="white" stroke-width="1" stroke-linecap="round"/>
+        </svg>
+        <div class="svc-name">โซเชียล<br>คอมเมิร์ช</div>
+        <p class="svc-desc">ขายสินค้าผ่านชุมชนออนไลน์ด้วยระบบ Live Shopping, Affiliate และ Influencer Management ในแพลตฟอร์มเดียว</p>
+      </div>
+      <div class="svc-card fade-up fd3">
+        <div class="svc-num">03</div>
+        <svg class="svc-icon" width="40" height="40" viewBox="0 0 40 40" fill="none">
+          <path d="M20 6l3.5 7h7.5l-6 4.5 2.5 7.5L20 21l-7.5 4 2.5-7.5L9 13h7.5z" stroke="#C9A96E" stroke-width="1.2" stroke-linejoin="round"/>
+          <circle cx="20" cy="34" r="3" stroke="#29B8D4" stroke-width="1.2"/>
+          <line x1="20" y1="31" x2="20" y2="27" stroke="#29B8D4" stroke-width="1.2"/>
+        </svg>
+        <div class="svc-name">จัดการพอร์ต<br>การลงทุน</div>
+        <p class="svc-desc">ติดตามและปรับสมดุลพอร์ตโฟลิโอด้วย Dashboard อัตโนมัติ รองรับหุ้น กองทุน และสินทรัพย์ดิจิทัล</p>
+      </div>
+      <div class="svc-card fade-up">
+        <div class="svc-num">04</div>
+        <svg class="svc-icon" width="40" height="40" viewBox="0 0 40 40" fill="none">
+          <path d="M8 32V18l12-10 12 10v14" stroke="#C9A96E" stroke-width="1.2" stroke-linejoin="round"/>
+          <rect x="15" y="22" width="10" height="10" stroke="#29B8D4" stroke-width="1.2"/>
+        </svg>
+        <div class="svc-name">ชุมชนนักลงทุน<br>และผู้ขาย</div>
+        <p class="svc-desc">พื้นที่แบ่งปันความรู้ กลยุทธ์การลงทุน และรีวิวสินค้าจากผู้ใช้จริง พร้อมระบบ Trust Score</p>
+      </div>
+      <div class="svc-card fade-up fd2">
+        <div class="svc-num">05</div>
+        <svg class="svc-icon" width="40" height="40" viewBox="0 0 40 40" fill="none">
+          <rect x="8" y="8" width="10" height="10" rx="1.5" stroke="#C9A96E" stroke-width="1.2"/>
+          <rect x="22" y="8" width="10" height="10" rx="1.5" stroke="#C9A96E" stroke-width="1.2"/>
+          <rect x="8" y="22" width="10" height="10" rx="1.5" stroke="#C9A96E" stroke-width="1.2"/>
+          <rect x="22" y="22" width="10" height="10" rx="1.5" stroke="#29B8D4" stroke-width="1.2"/>
+        </svg>
+        <div class="svc-name">API & Data<br>Integration</div>
+        <p class="svc-desc">เชื่อมต่อกับระบบบัญชี ERP และ CRM ของธุรกิจผ่าน Open API มาตรฐาน พร้อม Developer Support ตลอด 24 ชั่วโมง</p>
+      </div>
+      <div class="svc-card fade-up fd3">
+        <div class="svc-num">06</div>
+        <svg class="svc-icon" width="40" height="40" viewBox="0 0 40 40" fill="none">
+          <circle cx="20" cy="16" r="7" stroke="#C9A96E" stroke-width="1.2"/>
+          <path d="M9 34c0-6.075 4.925-11 11-11s11 4.925 11 11" stroke="#29B8D4" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+        <div class="svc-name">Wealth Advisory<br>โดยผู้เชี่ยวชาญ</div>
+        <p class="svc-desc">ปรึกษานักวิเคราะห์การเงินที่ผ่านการรับรองแบบ 1:1 ทั้งทางวิดีโอและข้อความ พร้อมรายงานรายเดือน</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── INVESTMENT ── -->
+<section class="investment" id="investment">
+  <div class="wrap">
+    <div class="invest-grid">
+      <div>
+        <div class="tag fade-up">ตลาดหลักทรัพย์</div>
+        <h2 class="headline fade-up" style="margin-bottom:0">
+          ลงทุน<em>ฉลาดขึ้น</em><br>ด้วยข้อมูลเชิงลึก
+        </h2>
+        <ul class="invest-list fade-up">
+          <li>ข้อมูลเรียลไทม์จาก SET & mai</li>
+          <li>เครื่องมือ Technical Analysis ครบชุด</li>
+          <li>Backtesting กลยุทธ์ด้วย Historical Data</li>
+          <li>แจ้งเตือนสัญญาณผ่าน LINE & Email</li>
+          <li>รายงานการวิเคราะห์รายสัปดาห์จากทีมผู้เชี่ยวชาญ</li>
+        </ul>
+        <a href="#contact" class="btn-primary fade-up">เริ่มวิเคราะห์ฟรี 30 วัน</a>
+      </div>
+      <div class="market-panel fade-up">
+        <div class="panel-head">
+          <span class="panel-title">Market Watch</span>
+          <span class="live-badge">Live</span>
+        </div>
+        <div class="ticker-list">
+          <div class="ticker-row">
+            <div><div class="t-sym">PTT</div><div class="t-name">ปตท. จำกัด (มหาชน)</div></div>
+            <div><div class="t-price">฿33.50</div><div class="t-change up">▲ +1.23%</div></div>
+          </div>
+          <div class="ticker-row">
+            <div><div class="t-sym">ADVANC</div><div class="t-name">แอดวานซ์ อินโฟ เซอร์วิส</div></div>
+            <div><div class="t-price">฿242.00</div><div class="t-change up">▲ +0.84%</div></div>
+          </div>
+          <div class="ticker-row">
+            <div><div class="t-sym">CPALL</div><div class="t-name">ซีพี ออลล์ จำกัด (มหาชน)</div></div>
+            <div><div class="t-price">฿63.75</div><div class="t-change down">▼ -0.39%</div></div>
+          </div>
+          <div class="ticker-row">
+            <div><div class="t-sym">SCB</div><div class="t-name">ไทยพาณิชย์ จำกัด (มหาชน)</div></div>
+            <div><div class="t-price">฿108.50</div><div class="t-change up">▲ +1.88%</div></div>
+          </div>
+          <div class="ticker-row">
+            <div><div class="t-sym">KBANK</div><div class="t-name">กสิกรไทย จำกัด (มหาชน)</div></div>
+            <div><div class="t-price">฿145.00</div><div class="t-change down">▼ -0.68%</div></div>
+          </div>
+        </div>
+        <div class="panel-foot">
+          <span class="panel-foot-label">SET Index</span>
+          <span class="panel-foot-val">1,487.62 <span style="font-size:0.78rem;color:#4ADE80">▲ +0.56%</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SOCIAL COMMERCE ── -->
+<section class="social" id="social">
+  <div class="wrap">
+    <div class="section-header-center">
+      <div class="tag fade-up">โซเชียลคอมเมิร์ช</div>
+      <h2 class="headline fade-up">เปลี่ยน <em>Followers</em> ให้กลายเป็นรายได้จริง</h2>
+      <p class="body-text fade-up">ระบบครบวงจรที่ช่วยให้นักขายและ Influencer สร้างรายได้จากชุมชนของตัวเองได้ง่ายและมีประสิทธิภาพ</p>
+    </div>
+    <div class="social-grid">
+      <div class="sc-cell hero-cell fade-up">
+        <span class="sc-icon">🛍</span>
+        <h3 class="sc-hero-title">Live Shopping<br><em>ยุคใหม่</em></h3>
+        <p class="sc-hero-body">ระบบ Live Commerce แบบ Interactive ที่ให้ผู้ชมกดซื้อสินค้าได้ทันทีระหว่าง Live สด พร้อม Auto-capture Order, Payment Gateway และ Fulfillment ในระบบเดียว เพิ่มยอดขายได้สูงถึง 3 เท่าจากช่องทางปกติ</p>
+      </div>
+      <div class="sc-cell fade-up fd2">
+        <span class="sc-icon">🤝</span>
+        <div class="sc-title">Influencer Network</div>
+        <p class="sc-body">เชื่อมต่อกับ Influencer กว่า 12,000 คน ทั้ง Micro และ Macro ด้วยระบบ Matching อัตโนมัติตามกลุ่มเป้าหมาย</p>
+      </div>
+      <div class="sc-cell fade-up fd3">
+        <span class="sc-icon">📊</span>
+        <div class="sc-title">Analytics Dashboard</div>
+        <p class="sc-body">วิเคราะห์ยอดขาย Engagement Rate ROI และพฤติกรรมผู้บริโภคแบบเรียลไทม์อย่างละเอียด</p>
+      </div>
+      <div class="sc-cell fade-up fd2">
+        <span class="sc-icon">💳</span>
+        <div class="sc-title">Payment & Logistics</div>
+        <p class="sc-body">ชำระเงินผ่าน 20+ ช่องทาง พร้อมเชื่อมต่อขนส่งชั้นนำอัตโนมัติ ครบในที่เดียว</p>
+      </div>
+      <div class="sc-cell fade-up fd3">
+        <span class="sc-icon">⭐</span>
+        <div class="sc-title">Community Reviews</div>
+        <p class="sc-body">ระบบรีวิวแบบ Verified ที่สร้างความน่าเชื่อถือและเพิ่ม Conversion Rate อย่างมีนัยสำคัญ</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA ── -->
+<section class="cta-section" id="contact">
+  <div class="wrap">
+    <div class="cta-divider"></div>
+    <h2 class="cta-title fade-up">พร้อมเริ่มต้น<br><em>บทใหม่</em>ของธุรกิจ?</h2>
+    <p class="cta-sub fade-up">ทดลองใช้ฟรี 30 วัน ไม่ต้องใช้บัตรเครดิต ทีมงานผู้เชี่ยวชาญพร้อมดูแลคุณตลอด 24 ชั่วโมง</p>
+    <div class="cta-actions fade-up">
+      <a href="#" class="btn-primary">เริ่มทดลองฟรี</a>
+      <a href="#" class="btn-ghost">นัดหมายปรึกษา</a>
+    </div>
+    <p class="cta-trust fade-up">★★★★★ &nbsp; ได้รับความไว้วางใจจากผู้ประกอบการและนักลงทุนกว่า 48,000 ราย</p>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="f-logo">NEX<span>US</span></div>
+        <p class="f-tagline">แพลตฟอร์มเชื่อมต่อโซเชียลคอมเมิร์ชและการลงทุนในตลาดหลักทรัพย์อย่างครบวงจร</p>
+      </div>
+      <div>
+        <div class="f-col-title">บริการ</div>
+        <ul class="f-links">
+          <li><a href="#">วิเคราะห์ตลาดหุ้น</a></li>
+          <li><a href="#">จัดการพอร์ต</a></li>
+          <li><a href="#">Live Shopping</a></li>
+          <li><a href="#">Influencer Network</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="f-col-title">บริษัท</div>
+        <ul class="f-links">
+          <li><a href="#">เกี่ยวกับเรา</a></li>
+          <li><a href="#">ทีมงาน</a></li>
+          <li><a href="#">ข่าวสาร</a></li>
+          <li><a href="#">ร่วมงานกับเรา</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="f-col-title">ติดต่อ</div>
+        <ul class="f-links">
+          <li><a href="#">info@nexus.co.th</a></li>
+          <li><a href="#">02-xxx-xxxx</a></li>
+          <li><a href="#">LINE: @nexus</a></li>
+          <li><a href="#">กรุงเทพมหานคร, ไทย</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 NEXUS Co., Ltd. สงวนลิขสิทธิ์ทุกประการ</span>
+      <span>นโยบายความเป็นส่วนตัว · เงื่อนไขการใช้งาน</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ── CANVAS ──
+const canvas = document.getElementById('bg-canvas');
+const ctx = canvas.getContext('2d');
+function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+resize(); window.addEventListener('resize', resize);
+
+const nodes = Array.from({length:52}, () => ({
+  x: Math.random()*canvas.width, y: Math.random()*canvas.height,
+  vx: (Math.random()-.5)*.32, vy: (Math.random()-.5)*.32,
+  r: Math.random()*1.4+0.4,
+  gold: Math.random()>.5
+}));
+
+const rings = [
+  { cx:.78, cy:.38, r:220, angle:0, speed:.00025 },
+  { cx:.22, cy:.62, r:160, angle:1.2, speed:-.0003 },
+  { cx:.5,  cy:.5,  r:300, angle:2.4, speed:.00015 },
+];
+
+function draw() {
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  // bg glow left
+  const g1 = ctx.createRadialGradient(canvas.width*.15, canvas.height*.45, 0, canvas.width*.15, canvas.height*.45, canvas.width*.5);
+  g1.addColorStop(0,'rgba(19,28,58,0.5)'); g1.addColorStop(1,'rgba(8,12,24,0)');
+  ctx.fillStyle = g1; ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  // teal glow right
+  const g2 = ctx.createRadialGradient(canvas.width*.82, canvas.height*.18, 0, canvas.width*.82, canvas.height*.18, 260);
+  g2.addColorStop(0,'rgba(30,143,168,0.11)'); g2.addColorStop(1,'rgba(30,143,168,0)');
+  ctx.fillStyle = g2; ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  rings.forEach(rg => {
+    rg.angle += rg.speed;
+    const rx = canvas.width * rg.cx, ry = canvas.height * rg.cy;
+    ctx.beginPath(); ctx.arc(rx, ry, rg.r, 0, Math.PI*2);
+    ctx.strokeStyle = 'rgba(201,169,110,0.05)'; ctx.lineWidth = 1; ctx.stroke();
+    const dx = rx + Math.cos(rg.angle)*rg.r, dy = ry + Math.sin(rg.angle)*rg.r;
+    ctx.beginPath(); ctx.arc(dx, dy, 2, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(201,169,110,0.4)'; ctx.fill();
+  });
+
+  for (let i=0;i<nodes.length;i++) for (let j=i+1;j<nodes.length;j++) {
+    const dx=nodes[i].x-nodes[j].x, dy=nodes[i].y-nodes[j].y, d=Math.sqrt(dx*dx+dy*dy);
+    if (d<120) {
+      ctx.beginPath(); ctx.moveTo(nodes[i].x,nodes[i].y); ctx.lineTo(nodes[j].x,nodes[j].y);
+      ctx.strokeStyle=`rgba(201,169,110,${(1-d/120)*0.1})`; ctx.lineWidth=.4; ctx.stroke();
+    }
+  }
+  nodes.forEach(n => {
+    n.x+=n.vx; n.y+=n.vy;
+    if(n.x<0||n.x>canvas.width) n.vx*=-1;
+    if(n.y<0||n.y>canvas.height) n.vy*=-1;
+    ctx.beginPath(); ctx.arc(n.x,n.y,n.r,0,Math.PI*2);
+    ctx.fillStyle = n.gold ? 'rgba(201,169,110,0.45)' : 'rgba(41,184,212,0.35)'; ctx.fill();
+  });
+  requestAnimationFrame(draw);
+}
+draw();
+
+// ── SCROLL OBSERVER ──
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
